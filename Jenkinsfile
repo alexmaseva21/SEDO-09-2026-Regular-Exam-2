@@ -1,5 +1,5 @@
 // Runs shell commands on Linux agents and batch commands on Windows agents
-def run(String cmd) {
+def runCmd(String cmd) {
     if (isUnix()) {
         sh cmd
     } else {
@@ -24,25 +24,25 @@ pipeline {
 
         stage('Restore dependencies') {
             steps {
-                run 'dotnet restore'
+                script { runCmd 'dotnet restore' }
             }
         }
 
         stage('Build') {
             steps {
-                run 'dotnet build --no-restore --configuration Release'
+                script { runCmd 'dotnet build --no-restore --configuration Release' }
             }
         }
 
         stage('Run unit tests') {
             steps {
-                run 'dotnet test Homies.Tests/Homies.Tests.csproj --no-build --configuration Release --verbosity normal'
+                script { runCmd 'dotnet test Homies.Tests/Homies.Tests.csproj --no-build --configuration Release --verbosity normal' }
             }
         }
 
         stage('Run integration tests') {
             steps {
-                run 'dotnet test Homies.IntegrationTests/Homies.IntegrationTests.csproj --no-build --configuration Release --verbosity normal'
+                script { runCmd 'dotnet test Homies.IntegrationTests/Homies.IntegrationTests.csproj --no-build --configuration Release --verbosity normal' }
             }
         }
     }
